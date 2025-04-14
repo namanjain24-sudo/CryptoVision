@@ -8,7 +8,7 @@ import { DonutChart } from './components/donut-chart';
 import Hero from './components/Hero';
 import Features from './components/Features';
 import { DatabaseVisual } from './components/DatabaseVisual';
-import { Button } from './components/Button';
+import { Button } from './components/Button-2';
 import { ChevronRight } from 'lucide-react'; 
 import Testimonials from './components/Testimonials';
 import LiveDashboard from './components/LiveDashboard';
