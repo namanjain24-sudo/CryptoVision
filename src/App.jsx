@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 import Navbar from './components/Navbar';
 import PriceTicker from './components/PriceTicker';
 import DenseGridBackground from './components/GridBackground';
@@ -9,14 +10,17 @@ import Hero from './components/Hero';
 import Features from './components/Features';
 import { DatabaseVisual } from './components/DatabaseVisual';
 import { Button } from './components/Button-2';
-import { ChevronRight } from 'lucide-react'; 
+import { ChevronRight } from 'lucide-react';
 import Testimonials from './components/Testimonials';
 import LiveDashboard from './components/LiveDashboard';
 import Pricing from './components/Pricing';
 import EndHeroSection from './components/EndHeroSection';
 import LatestNews from './components/LatestNews';
 import Footer from './components/Footer';
-import AllCrypto from './components/allcrypto'; // Create this component
+import AllCrypto from './components/allcrypto';
+import { Login } from './components/pages/Login'; 
+import { Signup } from './components/pages/Signup';  
+
 
 function Home() {
   return (
@@ -66,10 +70,10 @@ function Home() {
               </p>
               <ul className="space-y-4 mb-8">
                 {[
-                  "Clean & interactive charts",
-                  "Portfolio growth comparisons",
-                  "Secure, easy-to-use dashboard",
-                  "Weekly insights and newsletters",
+                  'Clean & interactive charts',
+                  'Portfolio growth comparisons',
+                  'Secure, easy-to-use dashboard',
+                  'Weekly insights and newsletters',
                 ].map((item, i) => (
                   <li key={i} className="flex items-start">
                     <div className="mr-3 mt-1 h-5 w-5 flex-shrink-0 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center">
@@ -79,9 +83,7 @@ function Home() {
                   </li>
                 ))}
               </ul>
-              <Button>
-                Explore Analytics
-              </Button>
+              <Button>Explore Analytics</Button>
             </div>
             <div className="relative">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500 to-green-500 rounded-xl blur opacity-20"></div>
@@ -102,8 +104,8 @@ function Home() {
           </div>
         </div>
       </section>
-      <LiveDashboard/>
 
+      <LiveDashboard />
       <Testimonials />
       <Pricing />
       <LatestNews />
@@ -120,6 +122,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<LiveDashboard />} />
         <Route path="/all-crypto" element={<AllCrypto />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </Router>
   );
