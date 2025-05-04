@@ -1,54 +1,68 @@
-import React, { useEffect, useState } from 'react';
-import { Newspaper, ArrowRight, TrendingUp, Clock, Loader2, ExternalLink } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import React, { useEffect, useState } from "react";
+import {
+  Newspaper,
+  ArrowRight,
+  TrendingUp,
+  Clock,
+  Loader2,
+  ExternalLink,
+} from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 
 const LatestNews = () => {
   const [newsData, setNewsData] = useState({
-    status: 'loading',
+    status: "loading",
     error: null,
-    items: []
+    items: [],
   });
 
   useEffect(() => {
     const processNewsData = (rawData) => {
       return rawData.slice(0, 6).map((item, index) => ({
         id: item.id,
-        categories: item.categories.split('|')
+        categories: item.categories
+          .split("|")
           .slice(0, 2)
-          .map(cat => ({
+          .map((cat) => ({
             name: cat.trim(),
-            color: 'green'
+            color: "green",
           })),
         title: item.title,
         body: item.body,
         published_on: item.published_on,
         url: item.url,
         imageurl: item.imageurl,
-        isTrending: index < 3
+        isTrending: index < 3,
       }));
     };
 
     const fetchNews = async () => {
       try {
+        const apiKey = import.meta.env.VITE_CRYPTOCOMPARE_API_KEY;
+        if (!apiKey) {
+          throw new Error(
+            "CryptoCompare API key not found in environment variables."
+          );
+        }
         const response = await fetch(
-          'https://min-api.cryptocompare.com/data/v2/news/?lang=EN&api_key=8a32f838c0c2f4b1988c6e6c2ad5f3922f0def4e4894300315dcf4dc9bb8003b'
+          `https://min-api.cryptocompare.com/data/v2/news/?lang=EN&api_key=${apiKey}`
         );
-        
+
         if (!response.ok) {
-          throw new Error('Failed to fetch news. Please try again later.');
+          throw new Error("Failed to fetch news. Please try again later.");
         }
 
         const data = await response.json();
         setNewsData({
-          status: 'success',
+          status: "success",
           error: null,
-          items: processNewsData(data.Data)
+          items: processNewsData(data.Data),
         });
       } catch (err) {
         setNewsData({
-          status: 'error',
-          error: err.message || 'An unknown error occurred.',
-          items: []
+          status: "error",
+          error: err.message || "An unknown error occurred.",
+          items: [],
         });
       }
     };
@@ -64,11 +78,15 @@ const LatestNews = () => {
           <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse" />
         </div>
         <div>
-          <h2  className="text-3xl font-bold text-white mb-1">Latest Crypto News</h2>
-          <p className="text-gray-400 text-sm">Stay updated with the latest trends and updates</p>
+          <h2 className="text-3xl font-bold text-white mb-1">
+            Latest Crypto News
+          </h2>
+          <p className="text-gray-400 text-sm">
+            Stay updated with the latest trends and updates
+          </p>
         </div>
       </div>
-      <a 
+      <a
         href="https://www.cryptocompare.com/news/"
         target="_blank"
         rel="noopener noreferrer"
@@ -81,14 +99,14 @@ const LatestNews = () => {
   );
 
   const renderNewsCard = (item) => (
-    <article 
+    <article
       key={item.id}
       className="bg-gray-900/50 rounded-2xl overflow-hidden hover:bg-gray-900/70 transition-all duration-300 group backdrop-blur-sm border border-gray-800/50 hover:border-green-500/30 shadow-xl hover:shadow-green-500/10"
     >
       {item.imageurl && (
         <div className="relative h-52 overflow-hidden">
-          <img 
-            src={item.imageurl} 
+          <img
+            src={item.imageurl}
             alt={item.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
@@ -103,7 +121,7 @@ const LatestNews = () => {
       <div className="p-6">
         <div className="flex items-center gap-2 mb-4">
           {item.categories.map((category, idx) => (
-            <span 
+            <span
               key={idx}
               className="text-xs font-medium text-green-500 bg-green-500/10 px-3 py-1 rounded-full"
             >
@@ -112,7 +130,7 @@ const LatestNews = () => {
           ))}
         </div>
 
-        <a 
+        <a
           href={item.url}
           target="_blank"
           rel="noopener noreferrer"
@@ -123,7 +141,7 @@ const LatestNews = () => {
             <ExternalLink className="w-4 h-4 opacity-0 group-hover/link:opacity-100 transition-opacity" />
           </h3>
         </a>
-        
+
         <p className="text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed">
           {item.body}
         </p>
@@ -132,7 +150,9 @@ const LatestNews = () => {
           <div className="flex items-center gap-2 text-gray-500 bg-black/30 px-3 py-1 rounded-full">
             <Clock className="w-4 h-4" />
             <span>
-              {formatDistanceToNow(new Date(item.published_on * 1000), { addSuffix: true })}
+              {formatDistanceToNow(new Date(item.published_on * 1000), {
+                addSuffix: true,
+              })}
             </span>
           </div>
         </div>
@@ -140,10 +160,9 @@ const LatestNews = () => {
     </article>
   );
 
-  if (newsData.status === 'loading') {
+  if (newsData.status === "loading") {
     return (
       <section id="LatestNews" className="bg-black py-16">
-
         <div className="max-w-7xl mx-auto px-4 flex justify-center items-center min-h-[400px]">
           <div className="flex flex-col items-center gap-4">
             <Loader2 className="w-8 h-8 text-green-500 animate-spin" />
@@ -154,7 +173,7 @@ const LatestNews = () => {
     );
   }
 
-  if (newsData.status === 'error') {
+  if (newsData.status === "error") {
     return (
       <section id="LatestNews" className="bg-black py-16">
         <div className="max-w-7xl mx-auto px-4 flex justify-center items-center min-h-[400px]">
